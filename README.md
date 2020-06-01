@@ -1,7 +1,4 @@
-# Example: Cassandra with StatefulSets on Kubernetes
+# Cassandra with StatefulSets on Kubernetes
 
-
-This directory contains the source code and Kubernetes manifests for Cassandra
-deployment with StatefulSets tutorial.
-
-Follow this tutorial at https://kubernetes.io/docs/tutorials/stateful-application/cassandra/.
+base content from [kubernetes/examples](https://github.com/kubernetes/examples/commit/6f9fad9e3df6a439becde6985c20e6f18554a78e)
+and aim to can be used in production 
