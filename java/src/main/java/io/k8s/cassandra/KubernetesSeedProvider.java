@@ -17,19 +17,25 @@
 
 package io.k8s.cassandra;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
+import io.kubernetes.client.openapi.ApiClient;
+import io.kubernetes.client.openapi.ApiException;
+import io.kubernetes.client.openapi.Configuration;
+import io.kubernetes.client.openapi.apis.CoreV1Api;
+import io.kubernetes.client.openapi.models.V1Endpoints;
+import io.kubernetes.client.util.Config;
 import org.apache.cassandra.locator.SeedProvider;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.jna.Native;
+import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Self discovery {@link SeedProvider} that creates a list of Cassandra Seeds by
@@ -44,61 +50,74 @@ import com.sun.jna.Native;
  */
 public class KubernetesSeedProvider implements SeedProvider {
 
-	private static final Logger logger = LoggerFactory.getLogger(KubernetesSeedProvider.class);
+    private static final Logger logger = LoggerFactory.getLogger(KubernetesSeedProvider.class);
+
+    private List<InetAddress> getEndpoints(String namespace, String service, String seeds) {
+        try {
+            ApiClient client = Config.defaultClient();
+            Configuration.setDefaultApiClient(client);
+
+            CoreV1Api api = new CoreV1Api();
+            V1Endpoints v1Endpoints = api.readNamespacedEndpoints(service, namespace, null, null, false);
+            return Objects.requireNonNull(v1Endpoints.getSubsets()).stream().flatMap(o -> Objects.requireNonNull(o.getAddresses()).stream().flatMap(i -> {
+                String ip = i.getIp();
+                try {
+                    return Stream.of(InetAddress.getByName(ip));
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                    return Stream.empty();
+                }
+            })).collect(Collectors.toList());
+        } catch (IOException | ApiException | NullPointerException e) {
+            logger.error("can't find endpoints due to: ", e);
+            String[] split = seeds.split(",");
+            ArrayList<InetAddress> inetAddressArrayList = new ArrayList<>();
+            for (String s : split) {
+                try {
+                    InetAddress inetAddress = InetAddress.getByName(s);
+                    inetAddressArrayList.add(inetAddress);
+                } catch (UnknownHostException ex) {
+                    logger.error("can't resolve ip addr of seeds node, check env CASSANDRA_SEEDS", ex);
+                    System.exit(1);
+                }
+            }
+            return inetAddressArrayList;
+        }
+    }
 
 
-	/**
-	 * Create new seed provider
-	 *
-	 * @param params
-	 */
-	public KubernetesSeedProvider(Map<String, String> params) {
-	}
+    /**
+     * Create new seed provider
+     *
+     * @param params
+     */
+    public KubernetesSeedProvider(Map<String, String> params) {
+    }
 
-	/**
-	 * Call Kubernetes API to collect a list of seed providers
-	 *
-	 * @return list of seed providers
-	 */
-	public List<InetAddress> getSeeds() {
-		GoInterface go = (GoInterface) Native.loadLibrary("cassandra-seed.so", GoInterface.class);
+    /**
+     * Call Kubernetes API to collect a list of seed providers
+     *
+     * @return list of seed providers
+     */
+    public List<InetAddress> getSeeds() {
+        String service = getEnvOrDefault("CASSANDRA_SERVICE", "cassandra");
+        String namespace = getEnvOrDefault("POD_NAMESPACE", "default");
 
-		String service = getEnvOrDefault("CASSANDRA_SERVICE", "cassandra");
-		String namespace = getEnvOrDefault("POD_NAMESPACE", "default");
+        String initialSeeds = getEnvOrDefault("CASSANDRA_SEEDS", "");
 
-		String initialSeeds = getEnvOrDefault("CASSANDRA_SEEDS", "");
+        if ("".equals(initialSeeds)) {
+            initialSeeds = getEnvOrDefault("POD_IP", "");
+        }
 
-		if ("".equals(initialSeeds)) {
-			initialSeeds = getEnvOrDefault("POD_IP", "");
-		}
+        return getEndpoints(namespace, service, initialSeeds);
+    }
 
-		String seedSizeVar = getEnvOrDefault("CASSANDRA_SERVICE_NUM_SEEDS", "8");
-		Integer seedSize = Integer.valueOf(seedSizeVar);
+    private static String getEnvOrDefault(String var, String def) {
+        String val = System.getenv(var);
+        if (val == null) {
+            val = def;
+        }
+        return val;
+    }
 
-		String data = go.GetEndpoints(namespace, service, initialSeeds);
-		ObjectMapper mapper = new ObjectMapper();
-
-		try {
-			Endpoints endpoints = mapper.readValue(data, Endpoints.class);
-			logger.info("cassandra seeds: {}", endpoints.ips.toString());
-			return Collections.unmodifiableList(endpoints.ips);
-		} catch (IOException e) {
-			// This should not happen
-			logger.error("unexpected error building cassandra seeds: {}" , e.getMessage());
-			return Collections.emptyList();
-		}
-	}
-
-	private static String getEnvOrDefault(String var, String def) {
-		String val = System.getenv(var);
-		if (val == null) {
-			val = def;
-		}
-		return val;
-	}
-
-	@JsonIgnoreProperties(ignoreUnknown = true)
-	static class Endpoints {
-		public List<InetAddress> ips;
-	}
 }
