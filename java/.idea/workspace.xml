@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DefaultGradleProjectSettings">
+    <option name="isMigrated" value="true" />
+  </component>
+  <component name="GradleLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="$USER_HOME$/Downloads/kafka-2.0.1-src" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/hazelcast-course" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/kafka" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="MacroExpansionManager">
+    <option name="directoryName" value="RCXsBYnV" />
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="y" value="23" />
+    <option name="width" value="1680" />
+    <option name="height" value="980" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/pom.xml" />
+    <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="ClojureREPL" factoryName="Local" activateToolWindowBeforeRun="false">
+      <setting name="replType" value="NREPL" />
+      <setting name="execution" value="LEININGEN" />
+      <setting name="jvmArgs" value="" />
+      <setting name="parameters" value="" />
+      <setting name="workingDir" value="" />
+      <setting name="profiles" value="" />
+      <setting name="aliases" value="" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="ClojureREPL" factoryName="Remote" activateToolWindowBeforeRun="false">
+      <setting name="host" value="" />
+      <setting name="port" value="0" />
+      <setting name="replType" value="SOCKET" />
+      <setting name="configType" value="SPECIFY" />
+      <setting name="fixLineNumbers" value="false" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="SbtLocalSettings">
+    <option name="projectSyncType">
+      <map>
+        <entry key="$USER_HOME$/Downloads/akka-grpc-quickstart-scala" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/akka-grpc-quickstart-scala 2" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/akka-samples-cluster-java" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/akka-samples-cqrs-scala" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/akka-samples-persistence-scala" value="PREVIEW" />
+        <entry key="$USER_HOME$/Downloads/grpc-proxy" value="PREVIEW" />
+        <entry key="$USER_HOME$/codebase/rc" value="PREVIEW" />
+        <entry key="$USER_HOME$/go/src/uptime" value="PREVIEW" />
+        <entry key="$USER_HOME$/http4s-bench" value="PREVIEW" />
+        <entry key="$PROJECT_DIR$/../../../flink2/uptime-flink" value="PREVIEW" />
+        <entry key="$USER_HOME$/monitor/aws-health-event-monitor" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/chanamq" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/continuation.scala" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/devops-tools/kafka-client" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/exchange-system-demo/account-sys" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/exchange-system-demo/procedure-fee" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/jopts" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/kafka-manager" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/server" value="PREVIEW" />
+        <entry key="$USER_HOME$/otherbase/webscrapy" value="PREVIEW" />
+      </map>
+    </option>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
